@@ -1,0 +1,113 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "omnidocs"
+version = "2.0.0"
+description = "Convert documentation sites to PDF and Markdown formats - Make docs LLM-ready"
+authors = [{name = "Your Name", email = "your.email@example.com"}]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Documentation",
+    "Topic :: Software Development :: Documentation",
+    "Topic :: Text Processing :: Markup :: HTML",
+    "Topic :: Text Processing :: Markup :: Markdown",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+]
+keywords = ["gitbook", "pdf", "markdown", "documentation", "converter", "playwright", "llm", "ai"]
+
+dependencies = [
+    "playwright>=1.40.0",
+    "pypdf>=3.0.0",
+    "requests>=2.31.0",
+    "beautifulsoup4>=4.12.0",
+    "markdownify>=0.11.0",
+    "html2text>=2020.1.16",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+    "ipython>=8.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/1to3for5vi7ate9x/omnidocs"
+Repository = "https://github.com/1to3for5vi7ate9x/omnidocs"
+Issues = "https://github.com/1to3for5vi7ate9x/omnidocs/issues"
+
+[project.scripts]
+omnidocs = "gitbooktopdf.cli:main"
+docuforge = "gitbooktopdf.cli:main"  # Backward compatibility
+gitbooktopdf = "gitbooktopdf.cli:main"  # Backward compatibility
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["gitbooktopdf*"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "--verbose --cov=gitbooktopdf --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["src/gitbooktopdf"]
+omit = ["*/tests/*", "*/test_*.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = ["E203", "W503"]
+exclude = [".git", "__pycache__", "dist", "build", "*.egg-info"]
