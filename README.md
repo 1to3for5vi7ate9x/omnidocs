@@ -7,10 +7,11 @@ A powerful Python tool to convert documentation sites (GitBook, MkDocs, Docusaur
 - **Universal Documentation Support**: Works with GitBook, MkDocs, Docusaurus, and other documentation platforms
 - **Multiple Output Formats**: Convert to PDF, Markdown, or both simultaneously
 - **LLM-Ready Output**: Generate clean Markdown files perfect for AI/LLM consumption
-- **Automatic Link Discovery**: Intelligently discovers all documentation pages from navigation menus
+- **Deep Link Discovery**: Recursively discovers documentation pages with configurable depth (NEW!)
+- **Smart Navigation Detection**: Automatically finds and follows navigation menus and sidebars
 - **High-Quality PDF Output**: Preserves formatting, styles, and layout using Playwright
-- **Customizable Options**: Configure page format, margins, and other settings
-- **Fast & Efficient**: Optimized processing with progress tracking
+- **Customizable Options**: Configure page format, margins, crawl depth, and other settings
+- **Fast & Efficient**: Optimized processing with progress tracking and parallel operations
 - **Easy Installation**: Simple pip install with minimal dependencies
 
 ## Why Omnidocs?
@@ -82,10 +83,17 @@ omnidocs https://docs.example.com/ \
   --margin-bottom 15mm \
   --no-background
 
+# Convert with custom crawl depth for nested documentation
+omnidocs https://docs.example.com/ \
+  --format markdown \
+  --max-depth 3 \
+  --timeout 90
+
 # Convert to both formats with custom settings
 omnidocs https://docs.example.com/ \
   --format both \
   --output-dir documentation \
+  --max-depth 2 \
   --timeout 120
 ```
 
@@ -137,7 +145,8 @@ pdf_options = {
 converter = DocumentationConverter(
     base_url="https://docs.example.com/",
     output_format="both",
-    pdf_options=pdf_options
+    pdf_options=pdf_options,
+    max_depth=3  # Control crawl depth for nested docs
 )
 
 # Customize timeouts
@@ -172,6 +181,7 @@ markdown_converter.combine_markdown_files(markdown_files)
 | `--margin-left` | | Left margin | `20mm` |
 | `--margin-right` | | Right margin | `20mm` |
 | `--timeout` | | Page load timeout (seconds) | `60` |
+| `--max-depth` | | Maximum crawl depth for link discovery | `3` |
 
 ## Output Formats
 
@@ -288,8 +298,11 @@ omnidocs https://www.mkdocs.org/ --format markdown
 # Docusaurus documentation
 omnidocs https://docusaurus.io/docs --format pdf
 
-# Custom documentation site
-omnidocs https://your-docs.example.com/ --format both
+# ZITADEL documentation with deep crawling
+omnidocs https://zitadel.com/docs/ --format markdown --max-depth 3
+
+# Custom documentation site with specific depth
+omnidocs https://your-docs.example.com/ --format both --max-depth 2
 ```
 
 ### Creating LLM Training Data
@@ -357,9 +370,11 @@ print(f"Knowledge base created with {len(markdown_files)} documents")
    - Some sites may have rate limiting
 
 3. **Missing pages**
+   - Try increasing crawl depth: `--max-depth 4`
    - The tool looks for common navigation selectors
    - Some custom sites may need modifications
    - Check if the site requires authentication
+   - For deeply nested docs, use higher max-depth values
 
 4. **PDF generation fails**
    - Ensure you have write permissions
@@ -428,7 +443,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Changelog
 
-### Version 2.0.0 (Current)
+### Version 2.1.0 (Current)
+- **NEW**: Deep recursive link discovery with configurable depth
+- **NEW**: Improved navigation detection for modern documentation sites
+- **NEW**: Smart filtering of documentation vs non-documentation pages
+- **NEW**: Progress reporting during link discovery
+- Optimized link discovery performance with parallel processing
+- Added max-depth CLI parameter for controlling crawl depth
+- Better support for nested documentation structures
+
+### Version 2.0.0
 - Added Markdown output format for LLM-ready documentation
 - Support for converting to both PDF and Markdown simultaneously
 - Renamed project to Omnidocs to reflect universal documentation conversion

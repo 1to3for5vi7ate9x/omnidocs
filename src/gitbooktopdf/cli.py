@@ -99,6 +99,13 @@ Examples:
         help='Page load timeout in seconds (default: 60)'
     )
     
+    parser.add_argument(
+        '--max-depth',
+        type=int,
+        default=3,
+        help='Maximum depth to crawl when discovering links (default: 3)'
+    )
+    
     args = parser.parse_args()
     
     # Prepare PDF options
@@ -120,7 +127,8 @@ Examples:
             output_dir=args.output_dir,
             final_pdf=args.final_pdf,
             pdf_options=pdf_options,
-            output_format=args.format
+            output_format=args.format,
+            max_depth=args.max_depth
         )
         
         # Set timeout
